@@ -101,6 +101,8 @@ public class MBCommand extends BaseCommand {
                 baseCommand + "hologram addline <block> <line content> &7Adds line to hologram",
                 baseCommand + "hologram removeline <block> <line number> &7Removes line to hologram",
                 baseCommand + "hologram setline <block> <line number> <line content> &7Sets line to hologram",
+                baseCommand + "hologram setcommand <block> <command> &7Sets command to hologram",
+                baseCommand + "hologram removecommand <block> &7Removes command from hologram",
                 baseCommand + "list &7Shows all mineblocks on server",
                 baseCommand + "reset <block> &7Resets specified block's health",
                 baseCommand + "teleport <block> &7Teleports you to specified block"
@@ -378,6 +380,42 @@ public class MBCommand extends BaseCommand {
         Optional.ofNullable(plugin.getBlockRegistry().get(name))
                 .ifPresentOrElse(
                         block -> showHologram(plugin.getBukkitAudiences().sender(sender), block),
+                        () -> Colors.send(sender, "#DF2E38Block with name "+ name +" was not found!")
+                );
+    }
+
+    @Subcommand("setcommand")
+    @Syntax("/mb setcommand <block> <command>")
+    @CommandPermission("mb.admin.hologram")
+    @CommandCompletion("@blocks @nothing")
+    public void setCommand(CommandSender sender, String name, String value) {
+        Optional.ofNullable(plugin.getBlockRegistry().get(name))
+                .ifPresentOrElse(
+                        block -> {
+                            block.setCommand(value);
+                            saveBlock(block);
+                            Colors.send(sender,
+                                    "#2C74B3Command '" + value + "' was added!"
+                            );
+                        },
+                        () -> Colors.send(sender, "#DF2E38Block with name "+ name +" was not found!")
+                );
+    }
+
+    @Subcommand("removecommand")
+    @Syntax("/mb removecommand <block>")
+    @CommandPermission("mb.admin.hologram")
+    @CommandCompletion("@blocks")
+    public void removeCommand(CommandSender sender, @Single String name) {
+        Optional.ofNullable(plugin.getBlockRegistry().get(name))
+                .ifPresentOrElse(
+                        block -> {
+                            block.setCommand(null);
+                            saveBlock(block);
+                            Colors.send(sender,
+                                    "#2C74B3Command was removed!"
+                            );
+                        },
                         () -> Colors.send(sender, "#DF2E38Block with name "+ name +" was not found!")
                 );
     }

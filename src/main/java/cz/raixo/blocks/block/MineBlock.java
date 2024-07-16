@@ -48,6 +48,7 @@ public class MineBlock {
     private BlockTop top = new BlockTop();
     private int breakLimit = 0;
     private Map<UUID, PlayerData> playerDataMap = new HashMap<>();
+    private String command;
 
     public Runnable onBreak(Player player) {
         health.decrement();
@@ -73,6 +74,11 @@ public class MineBlock {
         reset();
         coolDown.activate();
         return runnable;
+    }
+
+    public void onInteract(Player player) {
+        if (command == null || command.isEmpty()) return;
+        player.performCommand(command);
     }
 
     public void show() {

@@ -48,6 +48,7 @@ public class BlocksConfig {
                 block.setBreakLimit(blockSection.getInt("break-limit", -1));
                 block.setLocation(getLocation(block, Objects.requireNonNull(blockSection.getConfigurationSection("location"), "Block " + id + " does not have a location set")));
                 block.setHologram(getHologram(block, Objects.requireNonNull(blockSection.getConfigurationSection("hologram"), "Block " + id + " does not have a hologram set")));
+                block.setCommand(blockSection.getString("command"));
 
                 ConfigurationSection coolDownSection = blockSection.getConfigurationSection("timeout");
                 if (coolDownSection != null) {
@@ -346,6 +347,7 @@ public class BlocksConfig {
         setHologram(blockSection.createSection("hologram"), block.getHologram());
         blockSection.set("health", block.getHealth().getMaxHealth());
         if (block.getPermission() != null) blockSection.set("permission", block.getPermission());
+        if (block.getCommand() != null) blockSection.set("command", block.getCommand());
 
         setCoolDown(blockSection.createSection("timeout"), block.getCoolDown());
         setMessages(blockSection.createSection("messages"), block.getMessages());
